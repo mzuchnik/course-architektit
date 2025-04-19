@@ -1,14 +1,15 @@
 spring:
   application:
-    name: ms1
+    name: ms2
   config:
     import: configserver:http://localhost:8888
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:8761/eureka
 server:
   port: 0
+
 management:
   endpoints:
     web:
