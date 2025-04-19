@@ -7,5 +7,8 @@ spring:
         git:
           uri: https://github.com/mzuchnik/course-architektit-config.git
           default-label: main
+          refresh-rate: 30
+          username: ${GITHUB_USERNAME}
+          password: ${GITHUB_TOKEN}
 server:
   port: 8888
