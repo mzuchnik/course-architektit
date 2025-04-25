@@ -26,4 +26,7 @@ class BookJpaEntity {
     @Column(nullable = false, name = "author")
     private String author;
 
+    @Column(nullable = false, name = "price")
+    private Double price;
+
 }

@@ -8,3 +8,7 @@ spring:
           uri: lb://BOOK-MS
           predicates:
             - Path=/api/v1/books/**
+        - id: ORDER-MS
+          uri: lb://ORDER-MS
+          predicates:
+            - Path=/api/v1/orders/**

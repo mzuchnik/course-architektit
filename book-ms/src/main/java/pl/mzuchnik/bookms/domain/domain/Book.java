@@ -10,14 +10,17 @@ public class Book {
 
     private String author;
 
-    Book(BookId id, String title, String author) {
-        validate(id, title, author);
+    private Price price;
+
+    Book(BookId id, String title, String author, Price price) {
+        validate(id, title, author, price);
         this.id = id;
         this.title = title;
         this.author = author;
+        this.price = price;
     }
 
-    private void validate(BookId id, String title, String author) {
+    private void validate(BookId id, String title, String author, Price price) {
         if(id == null){
             throw new BookException("BookId is null");
         }
@@ -26,6 +29,9 @@ public class Book {
         }
         if(author == null || author.isEmpty()){
             throw new BookException("Author is null or empty");
+        }
+        if(price == null){
+            throw new BookException("Price is null");
         }
     }
 
@@ -43,6 +49,13 @@ public class Book {
         this.author = newAuthor;
     }
 
+    public void changePrice(Price newPrice) {
+        if(newPrice == null){
+            throw new BookException("New price is null");
+        }
+        this.price = newPrice;
+    }
+
     public BookId getId() {
         return id;
     }
@@ -53,5 +66,9 @@ public class Book {
 
     public String getAuthor() {
         return author;
+    }
+
+    public Price getPrice() {
+        return price;
     }
 }
