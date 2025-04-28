@@ -1,8 +1,13 @@
 package pl.mzuchnik.orderms.infrastructure.adapters;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import pl.mzuchnik.commonconfig.properties.ApiGatewayProperties;
 import pl.mzuchnik.orderms.application.BookPriceProvider;
 import pl.mzuchnik.orderms.domain.BookId;
 import pl.mzuchnik.orderms.domain.Price;
@@ -14,20 +19,18 @@ import java.util.Optional;
 class RestBookPriceProvider implements BookPriceProvider {
 
     private final RestClient restClient;
-    private static final String BOOK_PRICE_ENDPOINT = "http://localhost:8080/api/v1/books/{bookId}/price";
+    private static final String BOOK_PRICE_ENDPOINT = "/api/v1/books/{bookId}/price";
 
-    RestBookPriceProvider(RestClient.Builder restClientBuilder) {
-        this.restClient = restClientBuilder.build();
+    RestBookPriceProvider(RestClient.Builder restClientBuilder,
+                          ApiGatewayProperties apiGatewayProperties) {
+        this.restClient = restClientBuilder.baseUrl(apiGatewayProperties.url()).build();
     }
 
-
     @Override
+    @CircuitBreaker(name = "getBookPrice", fallbackMethod = "fallbackGetBookPrice")
     public Optional<Price> getBookPrice(BookId bookId) {
 
-        ResponseEntity<BookPriceResponse> response = restClient.get()
-                .uri(BOOK_PRICE_ENDPOINT, bookId.uuid())
-                .retrieve()
-                .toEntity(BookPriceResponse.class);
+        ResponseEntity<BookPriceResponse> response = callForBookPrice(bookId);
         if(response.getStatusCode().is4xxClientError()) {
             return Optional.empty();
         }
@@ -36,6 +39,20 @@ class RestBookPriceProvider implements BookPriceProvider {
         }
 
         return Optional.of(new Price(BigDecimal.valueOf(response.getBody().price())));
+    }
+
+
+    @CircuitBreaker(name = "callForBookPrice", fallbackMethod = "fallbackCallForBookPrice")
+    @CacheEvict()
+    private ResponseEntity<BookPriceResponse> callForBookPrice(BookId bookId) {
+        return restClient.get()
+                .uri(BOOK_PRICE_ENDPOINT, bookId.uuid())
+                .retrieve()
+                .toEntity(BookPriceResponse.class);
+    }
+
+    private ResponseEntity<BookPriceResponse> fallbackCallForBookPrice(BookId bookId) {
+
     }
 
     record BookPriceResponse(double price) {
