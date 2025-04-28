@@ -22,8 +22,7 @@ public class OrderService implements CreateOrder {
         List<OrderItem> orderItems = new ArrayList<>();
 
         for (BookId bookId : bookIds) {
-            Price price = bookPriceProvider.getBookPrice(bookId).
-                    orElseThrow(() -> new OrderException("Cannot find price for BookId: " + bookId.uuid()));
+            Price price = bookPriceProvider.getBookPrice(bookId);
             orderItems.add(new OrderItem(bookId, 1, price));
         }
 

@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface BookPriceProvider {
 
-    Optional<Price> getBookPrice(BookId bookId);
+    Price getBookPrice(BookId bookId);
 }
