@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: system-metrics-analyzer-ms
+server:
+  port: 0
+eureka:
+  instance:
+    instance-id: ${spring.application.name}-${random.uuid}
+metrics:
+  cpu:
+    enabled: true
+    application-name: ${spring.application.name}
+    instance-name: ${eureka.instance.instance-id}
+    kafka:
+      topic: "cpu-metrics"
+      bootstrap-servers: localhost:9092
+      acts: NO_CONFIRMATION
+logging:
+  level:
+    pl.mzuchnik.commonkafkacpumetrics: TRACE
+    pl.mzuchnik: DEBUG
