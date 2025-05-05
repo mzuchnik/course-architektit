@@ -21,7 +21,7 @@ import java.util.Map;
 @EnableConfigurationProperties(CpuMetricsProperties.class)
 @EnableScheduling
 @Slf4j
-class CpuMetricsAutoConfigurer {
+public class CpuMetricsAutoConfigurer {
 
     @Bean
     public ProducerFactory<String, CpuMetric> getProducerCpuMetricConfig(CpuMetricsProperties cpuMetricsProperties) {
