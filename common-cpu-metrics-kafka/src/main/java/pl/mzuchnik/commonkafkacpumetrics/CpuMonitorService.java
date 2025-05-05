@@ -2,7 +2,6 @@ package pl.mzuchnik.commonkafkacpumetrics;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 

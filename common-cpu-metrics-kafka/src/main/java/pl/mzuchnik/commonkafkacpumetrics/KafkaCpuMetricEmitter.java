@@ -21,7 +21,6 @@ class KafkaCpuMetricEmitter {
         double cpuUsage = cpuMonitorService.calculateGlobalCpuUsage();
         CpuMetric cpuMetric = new CpuMetric(cpuUsage, properties.applicationName(), properties.instanceName(), Instant.now());
         String topic = properties.kafka().topic();
-
         log.trace("Sending cpu metric event, topic: '{}', event: '{}'", topic, cpuMetric);
         producer.send(topic, cpuMetric);
     }

@@ -8,3 +8,15 @@ eureka:
     instance-id: ${spring.application.name}-${random.uuid}
 server:
   port: 0
+metrics:
+  cpu:
+    enabled: true
+    kafka:
+      acts: no_confirmation
+      bootstrap-servers: localhost:9092
+      topic: "cpu-metrics"
+    application-name: ${spring.application.name}
+    instance-name: ${eureka.instance.instance-id}
+logging:
+  level:
+    pl.mzuchnik.commonkafkacpumetrics: TRACE
