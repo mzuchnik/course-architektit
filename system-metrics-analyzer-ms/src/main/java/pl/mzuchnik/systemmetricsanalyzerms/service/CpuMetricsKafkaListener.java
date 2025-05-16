@@ -20,7 +20,7 @@ class CpuMetricsKafkaListener {
     }
 
     @KafkaListener(topics = "cpu-metrics",
-                   groupId = "system-metrics-analyzer-ms",
+                   groupId = "cpu-metrics-analyzer-ms",
                    containerFactory = "cpuMetricKafkaListenerContainerFactory")
     public void handle(ConsumerRecord<String, CpuMetric> record) {
         AlertCpuService alertCpuService = new AlertCpuService();

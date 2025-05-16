@@ -1,0 +1,18 @@
+scrape_configs:
+  - job_name: 'microservices'
+    eureka_sd_configs:
+      - server: 'http://localhost:8761/eureka'  # Adres Eureki
+
+    # Ścieżka do metryk Prometheusa
+    metrics_path: /actuator/prometheus
+
+    # Przekształcenia etykiet (relabeling)
+#    relabel_configs:
+#      # Nadpisz adres scrapowania (IP:PORT)
+#      - source_labels: [__meta_eureka_instance_ip_addr, __meta_eureka_instance_port]
+#        target_label: __address__
+#        replacement: '${1}:${2}'
+#
+#      # Dodaj etykietę "application" z nazwą serwisu
+#      - source_labels: [__meta_eureka_app_name]
+#        target_label: application

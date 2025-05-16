@@ -1,34 +1,35 @@
 package pl.mzuchnik.metricalertsms.service;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.data.redis.core.RedisTemplate;
 import pl.mzuchnik.commonalertkafka.KafkaAlertHandler;
 import pl.mzuchnik.commonalertmodel.Alert;
+import pl.mzuchnik.metricalertsms.model.AlertEntity;
+import pl.mzuchnik.metricalertsms.repository.AlertEntityRepository;
 
 import java.time.Duration;
 
-class KafkaAlertHandlerImpl implements KafkaAlertHandler {
+public class KafkaAlertHandlerImpl implements KafkaAlertHandler {
 
-    private final RedisTemplate<String, Alert> redisTemplate;
+    private final AlertEntityRepository alertEntityRepository;
+    private final long TIME_TO_LIVE = Duration.ofDays(1).toSeconds();
 
-    KafkaAlertHandlerImpl(RedisTemplate<String, Alert> redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    public KafkaAlertHandlerImpl(AlertEntityRepository alertEntityRepository) {
+        this.alertEntityRepository = alertEntityRepository;
     }
 
     @Override
     public void handle(ConsumerRecord<String, Alert> record) {
-        Alert alert = record.value();
-        redisTemplate.opsForValue()
-                .setIfAbsent(
-                        buildKey(
-                                record.topic(),
-                                record.partition(),
-                                record.offset()),
-                        alert,
-                        Duration.ofHours(24));
+        AlertEntity alertEntity = mapToEntity(record);
+        alertEntityRepository.save(alertEntity);
     }
 
-    private static String buildKey(String topic, int partition, long offset){
+    private AlertEntity mapToEntity(ConsumerRecord<String, Alert> record) {
+        return AlertEntity.of(buildKey(record.topic(), record.partition(), record.offset()),
+                record.value(),
+                TIME_TO_LIVE);
+    }
+
+    private static String buildKey(String topic, int partition, long offset) {
         return String.format("%s:%d:%d", topic, partition, offset);
     }
 }

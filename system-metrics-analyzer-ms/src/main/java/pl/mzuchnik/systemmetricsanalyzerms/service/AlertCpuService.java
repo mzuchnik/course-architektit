@@ -26,6 +26,6 @@ class AlertCpuService {
             priority = "MEDIUM";
         }
 
-        return new Alert("CPU", priority, cpuMetric.toString(), Instant.now());
+        return new Alert("CPU", priority, cpuMetric.applicationName(), cpuMetric.instance(), String.valueOf(cpuMetric.cpuProcentUsage()), Instant.now().toEpochMilli());
     }
 }

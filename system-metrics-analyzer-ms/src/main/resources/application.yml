@@ -7,14 +7,20 @@ eureka:
   instance:
     instance-id: ${spring.application.name}-${random.uuid}
 metrics:
+  enabled: true
   cpu:
-    enabled: true
-    application-name: ${spring.application.name}
-    instance-name: ${eureka.instance.instance-id}
     kafka:
+      bootstrap-servers: http://localhost:9092
       topic: "cpu-metrics"
-      bootstrap-servers: localhost:9092
-      acts: NO_CONFIRMATION
+    interval: 5000
+  ram:
+    kafka:
+      bootstrap-servers: http://localhost:9092
+      topic: "ram-metrics"
+    interval: 5000
+service:
+  name: ${spring.application.name}
+  instance: ${eureka.instance.instance-id}
 logging:
   level:
     pl.mzuchnik.commonkafkacpumetrics: TRACE
