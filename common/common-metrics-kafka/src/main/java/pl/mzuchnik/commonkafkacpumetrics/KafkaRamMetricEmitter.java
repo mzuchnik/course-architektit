@@ -8,6 +8,8 @@ import pl.mzuchnik.commoncpumetricsmodel.RamMetric;
 import pl.mzuchnik.commoninstance.ServiceProperties;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.spi.DecimalFormatSymbolsProvider;
 import java.time.Instant;
 
 @RequiredArgsConstructor
@@ -17,7 +19,6 @@ class KafkaRamMetricEmitter {
     private final KafkaTemplate<String, RamMetric> producer;
     private final MetricsProperties properties;
     private final ServiceProperties serviceProperties;
-    private final DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     @Scheduled(fixedDelayString = "${metrics.ram.interval}")
     void emitRamMetrics() {
@@ -36,7 +37,6 @@ class KafkaRamMetricEmitter {
     }
 
     private double toMB(long bytes) {
-        return Double.parseDouble(decimalFormat.format((double) bytes / 1024 / 1024));
-
+        return (double) bytes / 1024 / 1024;
     }
 }

@@ -17,7 +17,7 @@ spring:
           predicates:
             - Path=/api/v1/alerts/**
 metrics:
-  enabled: true
+  enabled: false
   cpu:
     kafka:
       bootstrap-servers: http://localhost:9092

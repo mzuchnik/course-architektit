@@ -30,3 +30,10 @@ services:
     network_mode: host
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    environment:
+      - STORAGE_TYPE=mem
+    ports:
+      - "9411:9411"
