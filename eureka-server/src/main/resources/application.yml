@@ -8,17 +8,17 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
 metrics:
-  enabled: false
+  enabled: true
   cpu:
     kafka:
       bootstrap-servers: http://localhost:9092
       topic: "cpu-metrics"
-    interval: 5000
+    interval: 60000
   ram:
     kafka:
       bootstrap-servers: http://localhost:9092
       topic: "ram-metrics"
-    interval: 5000
+    interval: 60000
 logging:
   level:
     pl.mzuchnik.commonkafkacpumetrics: TRACE

@@ -39,11 +39,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-config-server</artifactId>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>pl.mzuchnik</groupId>
-            <artifactId>common-metrics-kafka</artifactId>
+            <artifactId>common-zipkin</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>pl.mzuchnik</groupId>
             <artifactId>common-config</artifactId>

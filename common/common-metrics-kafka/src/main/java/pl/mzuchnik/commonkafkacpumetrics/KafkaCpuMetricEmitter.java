@@ -23,7 +23,7 @@ class KafkaCpuMetricEmitter {
     @Scheduled(fixedDelayString = "${metrics.cpu.interval}")
     public void emitCPUMetricEvent() {
         double cpuUsage = cpuMonitorService.calculateGlobalCpuUsage();
-        CpuMetric cpuMetric = new CpuMetric(Double.parseDouble(decimalFormat.format(cpuUsage)), serviceProperties.name(), serviceProperties.instance(), Instant.now().toEpochMilli());
+        CpuMetric cpuMetric = new CpuMetric(cpuUsage, serviceProperties.name(), serviceProperties.instance(), Instant.now().toEpochMilli());
         String topic = properties.cpu().kafka().topic();
         log.trace("Sending cpu metric event, topic: '{}', event: '{}'", topic, cpuMetric);
         producer.send(topic, cpuMetric);

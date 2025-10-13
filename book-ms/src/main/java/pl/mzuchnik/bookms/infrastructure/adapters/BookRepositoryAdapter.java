@@ -1,6 +1,5 @@
 package pl.mzuchnik.bookms.infrastructure.adapters;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.mzuchnik.bookms.domain.domain.Book;
