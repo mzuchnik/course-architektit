@@ -24,20 +24,21 @@ class RestBookPriceProvider implements BookPriceProvider {
     private final RestClient restClient;
     private final CacheManager cacheManager;
     private final String bookPriceEndpoint;
+    private static final String BOOK_URL = "http://BOOK-MS";
     private static final String LAST_BOOK_PRICE_CACHE_NAME = "lastBookPrice";
 
+
     RestBookPriceProvider(RestClient.Builder restClientBuilder,
-                          ApiGatewayProperties apiGatewayProperties,
                           ApiEndpointProperties apiEndpointProperties,
                           CacheManager cacheManager) {
-        this.restClient = restClientBuilder.baseUrl(apiGatewayProperties.url()).build();
+        this.restClient = restClientBuilder.baseUrl(BOOK_URL).build();
         this.bookPriceEndpoint = apiEndpointProperties.bookPriceEndpoint();
         this.cacheManager = cacheManager;
     }
 
     @Override
     @CircuitBreaker(name = LAST_BOOK_PRICE_CACHE_NAME, fallbackMethod = "fallbackCallForBookPrice")
-    @CachePut(cacheNames = LAST_BOOK_PRICE_CACHE_NAME, key = "#bookId.uuid().toString()")
+    //@CachePut(cacheNames = LAST_BOOK_PRICE_CACHE_NAME, key = "#bookId.uuid().toString()")
     public Price getBookPrice(BookId bookId) {
         BookPriceResponse bookPrice = callForBookPrice(bookId);
 

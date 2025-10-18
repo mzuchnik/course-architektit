@@ -1,6 +1,12 @@
 spring:
   application:
     name: book-ms
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8090/realms/arch-course}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8090/realms/arch-course/protocol/openid-connect/certs}
   config:
     import: optional:configserver:http://localhost:8888/
 eureka:
@@ -25,7 +31,43 @@ metrics:
 logging:
   level:
     pl.mzuchnik.commonkafkacpumetrics: TRACE
+    org.zalando.logbook: TRACE
 
 service:
   name: ${spring.application.name}
   instance: ${eureka.instance.instance-id}
+
+
+logbook:
+  predicate:
+    include:
+      - path: /api/**
+        methods:
+          - GET
+          - POST
+      - path: /actuator/**
+    exclude:
+      - path: /actuator/health
+      - path: /api/admin/**
+        methods:
+          - POST
+  filter.enabled: true
+  secure-filter.enabled: true
+  format.style: http
+  strategy: body-only-if-status-at-least
+  minimum-status: 200
+  obfuscate:
+    headers:
+      - Authorization
+      - X-Secret
+    parameters:
+      - access_token
+      - password
+  write:
+    chunk-size: 1000
+  attribute-extractors:
+    - type: JwtFirstMatchingClaimExtractor
+      claim-names: [ "sub", "subject" ]
+      claim-key: Principal
+    - type: JwtAllMatchingClaimsExtractor
+      claim-names: [ "sub", "iat" ]

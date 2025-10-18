@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.mzuchnik.bookms.application.BookManagementService;
 import pl.mzuchnik.bookms.domain.domain.Book;
@@ -27,11 +28,13 @@ class BookApi {
     private final BookRepository bookRepository;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('book-read')")
     List<BookResponse> getAllBooks() {
         return bookRepository.findAll().stream().map(BookResponse::from).toList();
     }
 
     @GetMapping("/{uuid}")
+    @PreAuthorize("hasAuthority('book-read')")
     ResponseEntity<BookResponse> getBook(@PathVariable(name = "uuid") String uuid) {
         return bookRepository.findById(BookId.create(UUID.fromString(uuid)))
                 .map(BookResponse::from)
@@ -40,6 +43,7 @@ class BookApi {
     }
 
     @PatchMapping("/{uuid}/author")
+    @PreAuthorize("hasAuthority('book-write')")
     ResponseEntity<Void> changeAuthor(@PathVariable(name = "uuid") String uuid,
                                       @Valid @RequestBody ChangeBookAuthorRequest requestBody) {
         try {
@@ -54,6 +58,7 @@ class BookApi {
     }
 
     @PatchMapping("/{uuid}/title")
+    @PreAuthorize("hasAuthority('book-write')")
     ResponseEntity<Void> changeTitle(@PathVariable(name = "uuid") String uuid,
                                      @Valid @RequestBody ChangeBookTitleRequest requestBody) {
         try {
@@ -68,6 +73,7 @@ class BookApi {
     }
 
     @PatchMapping("/{uuid}/price")
+    @PreAuthorize("hasAuthority('book-write')")
     ResponseEntity<Void> changePrice(@PathVariable(name = "uuid") String uuid,
                                      @Valid @RequestBody ChangeBookPriceRequest requestBody){
         try{
@@ -82,6 +88,7 @@ class BookApi {
     }
 
     @GetMapping("/{uuid}/price")
+    @PreAuthorize("hasAuthority('book-read')")
     ResponseEntity<BookPriceResponse> getPrice(@PathVariable(name = "uuid") String uuid) {
         try{
             Book book = bookRepository.findById(BookId.create(UUID.fromString(uuid))).orElseThrow(() -> new BookNotFoundException(uuid));
